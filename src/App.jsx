@@ -12,7 +12,7 @@ function App() {
 
   return (
     // Necesario para funcionar gh-pages
-    <BrowserRouter basename={basename}>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <NavMenu />
       <Routes>
         <Route path="/" element={<Inicio />} />
