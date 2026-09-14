@@ -9,7 +9,8 @@ import "./App.css";
 
 function App() {
   return (
-    <BrowserRouter>
+    // Necesario para funcionar gh-pages
+    <BrowserRouter basename={basename}>
       <NavMenu />
       <Routes>
         <Route path="/" element={<Inicio />} />
