@@ -8,6 +8,8 @@ import Footer from "./components/Footer";
 import "./App.css";
 
 function App() {
+  const basename = import.meta.env.BASE_URL;
+
   return (
     // Necesario para funcionar gh-pages
     <BrowserRouter basename={basename}>
