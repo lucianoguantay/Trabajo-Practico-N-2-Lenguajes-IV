@@ -1,6 +1,11 @@
 .box-header {
   text-align: center;
-  background-color: rgb(204, 112, 186);
+  background: linear-gradient(
+    135deg,
+    rgb(219, 134, 202) 0%,
+    #c026d3 60%,
+    #ec4899 100%
+  );
   margin: 100px;
   padding: 50px;
   border-radius: 6px;

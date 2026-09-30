@@ -1,0 +1,59 @@
+.contenedor {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(76, 29, 149, 0.15);
+  text-align: left;
+}
+.contenedor h2 {
+  text-align: justify;
+  padding: 20px;
+  color: #450a6c;
+}
+.form-label {
+  color: #1d0e40;
+  font-size: 15px; /*Altura del elemento*/
+}
+.form-control {
+  font-size: 17px;
+  padding: 12px;
+}
+/*Carteles que aparecen arriba*/
+.alert-success {
+  background-color: #d4edda !important;
+  color: #19782f !important;
+}
+
+.alert-danger {
+  background-color: #f3a9af !important;
+  color: #55060e !important;
+}
+/*Texto del error individual*/
+.invalid-feedback {
+  color: rgb(245, 31, 31) !important;
+}
+/* Estilos para campos válidos */
+.form-control.is-valid {
+  border-color: #27ae60 !important;
+  background-image: none !important;
+}
+.form-control.is-invalid {
+  border-color: #f5082b !important;
+  background-image: none;
+}
+
+.btn-primary {
+  border-radius: 20px;
+  background-color: rgb(54, 15, 91);
+  height: 50px;
+  transition: all 0.3s ease;
+  margin-top: 25px;
+}
+.btn-primary:hover {
+  background-color: #3c1497;
+  transform: translateY(-3px);
+  box-shadow: 0 20px 12px rgba(193, 54, 126, 0.4);
+}

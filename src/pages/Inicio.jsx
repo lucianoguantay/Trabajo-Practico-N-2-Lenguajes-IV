@@ -2,10 +2,14 @@ import PageHeader from "../components/PageHeader";
 
 function Inicio() {
   return (
-    <PageHeader
-      titulo="Inicio"
-      descripcion="Encontraras informacion basica sobre nosotros"
-    />
+    <>
+      <div className="page-transition">
+        <PageHeader
+          titulo="Inicio"
+          descripcion="Encontraras informacion basica sobre nosotros"
+        />
+      </div>
+    </>
   );
 }
 

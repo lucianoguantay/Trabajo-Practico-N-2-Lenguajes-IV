@@ -1,0 +1,689 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+src/
+  components/
+    Footer.css
+    Footer.jsx
+    FormularioCont.css
+    FormularioCont.jsx
+    NavMenu.css
+    NavMenu.jsx
+    PageHeader.css
+    PageHeader.jsx
+  pages/
+    Contacto.jsx
+    Error.jsx
+    Inicio.jsx
+    Servicios.jsx
+  App.css
+  App.jsx
+  main.jsx
+.gitignore
+.oxlintrc.json
+index.html
+package.json
+README.md
+vite.config.js
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="src/components/FormularioCont.css">
+.contenedor {
+  margin: 50px;
+  padding: 30px;
+  margin-left: 400px;
+  margin-right: 400px;
+  width: 600px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 30px;
+  justify-content: center;
+  padding-left: 60px;
+  padding-right: 60px;
+  text-align: center;
+}
+h2 {
+  text-align: justify;
+  padding: 20px;
+  color: #450a6c;
+}
+.form-label {
+  color: #1d0e40;
+  font-size: 15px; /*Altura del elemento*/
+}
+.form-control {
+  font-size: 17px;
+  padding: 12px;
+}
+/*Carteles que aparecen arriba*/
+.alert-success {
+  background-color: #d4edda !important;
+  color: #19782f !important;
+}
+
+.alert-danger {
+  background-color: #f3a9af !important;
+  color: #55060e !important;
+}
+/*Texto del error individual*/
+.invalid-feedback {
+  color: rgb(245, 31, 31) !important;
+}
+/* Estilos para campos válidos */
+.form-control.is-valid {
+  border-color: #27ae60 !important;
+  background-image: none !important;
+}
+.form-control.is-invalid {
+  border-color: #f5082b !important;
+  background-image: none;
+}
+
+.btn-primary {
+  border-radius: 20px;
+  background-color: rgb(54, 15, 91);
+  height: 50px;
+  transition: all 0.3s ease;
+  margin-top: 25px;
+}
+.btn-primary:hover {
+  background-color: #3c1497;
+  transform: translateY(-3px);
+  box-shadow: 0 20px 12px rgba(193, 54, 126, 0.4);
+}
+</file>
+
+<file path="src/components/FormularioCont.jsx">
+import { useRef, useState } from "react";
+import emailjs from "@emailjs/browser";
+import "./FormularioCont.css";
+
+const MAX_MENSAJE = 300;
+
+function FormularioCont() {
+  const form = useRef();
+  const [formData, setFormData] = useState({
+    nombreApellido: "",
+    email: "",
+    mensaje: "",
+  });
+  const [errores, setErrores] = useState({});
+  const [estadoForm, setEstadoForm] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrores((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  // Funcion Validar
+  const validar = () => {
+    const nuevosErrores = {};
+    let hayError = false;
+
+    const validarEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (formData.nombreApellido.trim() === "") {
+      nuevosErrores.nombreApellido = "El nombre y apellido son obligatorios.";
+      hayError = true;
+    }
+
+    if (formData.email.trim() === "") {
+      nuevosErrores.email = "El correo electrónico es obligatorio.";
+      hayError = true;
+    } else if (!validarEmail.test(formData.email.trim())) {
+      nuevosErrores.email = "Ingresá un correo válido (ej: nombre@gmail.com).";
+      hayError = true;
+    }
+
+    if (!formData.mensaje.trim()) {
+      nuevosErrores.mensaje = "El mensaje es obligatorio.";
+      hayError = true;
+    } else if (formData.mensaje.length > 300) {
+      nuevosErrores.mensaje = `El mensaje no puede superar los 300 caracteres.`;
+      hayError = true;
+    }
+
+    setErrores(nuevosErrores);
+    return !hayError;
+  };
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+    setEstadoForm(null);
+
+    if (!validar()) return;
+
+    setEstadoForm("enviando");
+
+    emailjs
+      .sendForm(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        form.current,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+      )
+      .then(
+        () => {
+          //Si el formulario se envio entonces reinicia loscampos
+          setEstadoForm("exito");
+          setFormData({ nombreApellido: "", email: "", mensaje: "" });
+          setErrores({});
+        },
+        (error) => {
+          console.error("Error EmailJS completo:", error);
+          setEstadoForm("error");
+        },
+      );
+  };
+
+  return (
+    <div className="contenedor">
+      <h2 className="form-title text-center mb-4">FORMULARIO DE CONTACTO</h2>
+
+      {estadoForm === "exito" && (
+        <div className="alert alert-success" role="alert">
+          El mensaje ha sido enviado con exito
+        </div>
+      )}
+      {estadoForm === "error" && (
+        <div className="alert alert-danger" role="alert">
+          No se pudo enviar el mensaje.
+        </div>
+      )}
+
+      <form ref={form} onSubmit={sendEmail} noValidate>
+        <div className="mb-3">
+          <label className="form-label">Nombre y Apellido *</label>
+          <input
+            type="text"
+            className={`form-control ${errores.nombreApellido ? "is-invalid" : ""}`}
+            id="nombreApellido"
+            name="nombreApellido"
+            placeholder="Ej: Juan Pérez"
+            value={formData.nombreApellido}
+            onChange={handleChange}
+          />
+          <div className="invalid-feedback">{errores.nombreApellido}</div>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Email *</label>
+          <input
+            type="email"
+            className={`form-control ${errores.email ? "is-invalid" : ""}`}
+            id="email"
+            name="email"
+            placeholder="Ingresar Email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <div className="invalid-feedback">{errores.email}</div>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Mensaje *</label>
+          <textarea
+            className={`form-control ${errores.mensaje ? "is-invalid" : ""}`}
+            id="mensaje"
+            name="mensaje"
+            rows="5"
+            placeholder="Escribí tu mensaje..."
+            value={formData.mensaje}
+            onChange={handleChange}
+          />
+          <div className="form-text text-end">
+            {formData.mensaje.length}/{MAX_MENSAJE}
+          </div>
+          <div className="invalid-feedback">{errores.mensaje}</div>
+        </div>
+
+        <button
+          type="submit"
+          className="btn btn-primary w-100"
+          disabled={estadoForm === "enviando"}
+        >
+          {estadoForm === "enviando" ? "ENVIANDO..." : "ENVIAR"}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default FormularioCont;
+</file>
+
+<file path="src/components/Footer.css">
+.piePagina {
+  background-color: #3f013d;
+  text-align: center;
+  padding: 20px;
+  color: #e5e3e5;
+  margin-top: 200px;
+}
+</file>
+
+<file path="src/components/Footer.jsx">
+import "./Footer.css";
+
+function Footer() {
+  return (
+    <footer className="piePagina">
+      <p className="mb-1">
+        Desarrollado por: <b>LUCIANO EMILIO GUANTAY</b>
+      </p>
+      <p className="mb-1">Catedra: Lenguajes IV</p>
+      <p className="mb1">Profesor Practica: Pacheco Carlos</p>
+      <a
+        href="https://github.com/lucianoguantay"
+        className="text-secondary mx-2 fs-5"
+      >
+        <i className="bi bi-github"></i>
+      </a>
+      <a
+        href="https://www.instagram.com/lucianoguantay08/"
+        className="text-decoration-none text-danger fs-4"
+      >
+        <i className="bi bi-instagram"></i>
+      </a>
+    </footer>
+  );
+}
+export default Footer;
+</file>
+
+<file path="src/components/NavMenu.css">
+#box-nav {
+  background-color: #3f013d;
+  padding: 15px;
+  height: 60px;
+}
+
+#box-nav ul {
+  list-style: none; /*Le saco el puntito*/
+  display: flex;
+  justify-content: center;
+}
+
+#box-nav a {
+  color: #ecf0f1;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+#box-nav a:hover {
+  background-color: #490650;
+  color: #b60c72;
+}
+</file>
+
+<file path="src/components/NavMenu.jsx">
+import { NavLink } from "react-router";
+import "./NavMenu.css";
+function NavMenu() {
+  return (
+    <div id="box-nav">
+      <nav>
+        <ul>
+          <li>
+            <NavLink to="/" end>
+              INICIO
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/servicios" end>
+              SERVICIOS
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/contacto" end>
+              CONTACTO
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  );
+}
+
+export default NavMenu;
+</file>
+
+<file path="src/components/PageHeader.css">
+.box-header {
+  text-align: center;
+  background-color: rgb(204, 112, 186);
+  margin: 100px;
+  padding: 50px;
+  border-radius: 6px;
+}
+
+.box-header h1 {
+  font-family: "Times New Roman", sans-serif;
+  color: rgb(113, 4, 64);
+  font-weight: bold;
+}
+
+.box-header p {
+  font-family: Verdana, sans-serif;
+  color: rgb(89, 3, 77);
+}
+</file>
+
+<file path="src/components/PageHeader.jsx">
+import "./PageHeader.css";
+
+function PageHeader({ titulo, descripcion }) {
+  if (titulo !== "Error 404") {
+    return (
+      <div className="box-header">
+        <h1 className="titulo-header"> Bienvenido a la pagina de {titulo} </h1>
+        <p className="parrafo-header"> Breve descripcion de la misma: {descripcion} </p>
+      </div>
+    );
+  } else {
+    return (
+      <div className="box-header">
+        <h1 className="titulo-header"> {titulo} </h1>
+        <p className="parrafo-header"> {descripcion} </p>
+      </div>
+    );
+  }
+}
+export default PageHeader;
+</file>
+
+<file path="src/pages/Contacto.jsx">
+import PageHeader from "../components/PageHeader";
+import FormularioCont from "../components/FormularioCont";
+function Contacto() {
+  return (
+    <>
+      <PageHeader titulo="Contacto" descripcion="FORMULARIO" />
+      <FormularioCont />
+    </>
+  );
+}
+
+export default Contacto;
+</file>
+
+<file path="src/pages/Error.jsx">
+import PageHeader from "../components/PageHeader";
+
+function Error() {
+  return(
+  <PageHeader 
+  titulo="Error 404" 
+  descripcion="Pagina No encontrada" />
+);
+}
+
+export default Error;
+</file>
+
+<file path="src/pages/Inicio.jsx">
+import PageHeader from "../components/PageHeader";
+
+function Inicio() {
+  return (
+    <PageHeader
+      titulo="Inicio"
+      descripcion="Encontraras informacion basica sobre nosotros"
+    />
+  );
+}
+
+export default Inicio;
+</file>
+
+<file path="src/pages/Servicios.jsx">
+import PageHeader from "../components/PageHeader";
+
+function Servicios() {
+  return (
+    <PageHeader
+      titulo="Servicios"
+      descripcion="En este apartado encontraras informacion acerca de todos nuestros servicios"
+    />
+  );
+}
+export default Servicios;
+</file>
+
+<file path="src/App.css">
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: #e89ee4;
+}
+</file>
+
+<file path="src/main.jsx">
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App.jsx";
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);
+</file>
+
+<file path=".gitignore">
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+</file>
+
+<file path=".oxlintrc.json">
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "oxc"],
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+  }
+}
+</file>
+
+<file path="index.html">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trabajo Practico N°2 - Lenguajes IV</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+</file>
+
+<file path="README.md">
+# React + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+
+## React Compiler
+
+The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+
+Note: This will impact Vite dev & build performances.
+You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+
+## Expanding the Oxlint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+</file>
+
+<file path="vite.config.js">
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import babel from "@rolldown/plugin-babel";
+import { defineConfig } from "vite";
+
+// https://vite.dev/config/
+export default defineConfig(({ command }) => {
+  return {
+    plugins: [react()],
+    base: command === "build" ? "/Trabajo-Practico-N-2-Lenguajes-IV/" : "/",
+  };
+});
+</file>
+
+<file path="src/App.jsx">
+import { BrowserRouter, Routes, Route } from "react-router";
+import Inicio from "./pages/Inicio";
+import Servicios from "./pages/Servicios";
+import Contacto from "./pages/Contacto";
+import Error from "./pages/Error";
+import NavMenu from "./components/NavMenu";
+import Footer from "./components/Footer";
+import "./App.css";
+
+function App() {
+  const basename = import.meta.env.BASE_URL;
+
+  return (
+    // Necesario para funcionar gh-pages
+    <BrowserRouter basename={basename}>
+      <NavMenu />
+      <Routes>
+        <Route path="/" element={<Inicio />} />
+        <Route path="/servicios" element={<Servicios />} />
+        <Route path="/contacto" element={<Contacto />} />
+        <Route path="*" element={<Error />} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
+  );
+}
+
+export default App;
+</file>
+
+<file path="package.json">
+{
+  "name": "trabajopractico2-react",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "predeploy": "npm run build && node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\"",
+    "deploy": "gh-pages -d dist"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@rolldown/plugin-babel": "^0.2.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "gh-pages": "^6.3.0",
+    "oxlint": "^1.81.0",
+    "vite": "^8.3.0"
+  }
+}
+</file>
+
+</files>

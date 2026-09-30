@@ -1,11 +1,13 @@
 import PageHeader from "../components/PageHeader";
 
 function Error() {
-  return(
-  <PageHeader 
-  titulo="Error 404" 
-  descripcion="Pagina No encontrada" />
-);
+  return (
+    <>
+      <div className="page-transition">
+        <PageHeader titulo="Error 404" descripcion="Pagina No encontrada" />
+      </div>
+    </>
+  );
 }
 
 export default Error;
