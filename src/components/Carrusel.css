@@ -1,0 +1,277 @@
+/* ====== Variables: cambiá los colores acá ====== */
+.cf {
+  --cf-card: #2b0a33;
+  --cf-card-borde: rgba(255, 255, 255, 0.12);
+  --cf-titulo: #ffffff;
+  --cf-texto: #ecd3f0;
+  --cf-acento: #f472b6;
+  --cf-chip-bg: rgba(255, 255, 255, 0.1);
+  --cf-ancho: 540px;
+  --cf-alto: 560px;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  max-width: 1300px;
+  margin: 0 auto 80px;
+  padding: 0 30px;
+  outline: none;
+}
+
+/* ====== Escenario 3D ====== */
+.cf-escenario {
+  position: relative;
+  flex: 1;
+  height: calc(var(--cf-alto) + 90px);
+  perspective: 1400px;
+  overflow: hidden;
+  /* Desvanece los bordes laterales en vez de cortarlos */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 12%,
+    #000 88%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 12%,
+    #000 88%,
+    transparent 100%
+  );
+}
+
+.cf-card {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: var(--cf-ancho);
+  max-width: 88%;
+  height: var(--cf-alto);
+  margin-left: calc(var(--cf-ancho) / -2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--cf-card);
+  border: 1px solid var(--cf-card-borde);
+  box-shadow: 0 25px 50px rgba(60, 0, 50, 0.45);
+  cursor: pointer;
+  z-index: calc(10 - var(--abs));
+  transform: translateX(calc(var(--offset) * 62%))
+    rotateY(calc(var(--offset) * -14deg)) scale(calc(1 - var(--abs) * 0.14));
+  opacity: calc(1 - var(--abs) * 0.22);
+  filter: blur(calc(var(--abs) * 1.2px)) brightness(calc(1 - var(--abs) * 0.18));
+  transition:
+    transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.7s ease,
+    filter 0.7s ease;
+}
+
+.cf-card.activo {
+  cursor: default;
+  border-color: rgba(244, 114, 182, 0.55);
+  box-shadow:
+    0 30px 60px rgba(60, 0, 50, 0.55),
+    0 0 0 1px rgba(244, 114, 182, 0.2);
+}
+
+.cf-card.oculto {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ====== Imagen ====== */
+.cf-imagen {
+  position: relative;
+  flex: 0 0 230px;
+  overflow: hidden;
+}
+
+.cf-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.cf-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fbcfe8;
+  background: rgba(30, 5, 38, 0.8);
+  backdrop-filter: blur(6px);
+}
+
+/* ====== Cuerpo ====== */
+.cf-cuerpo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px 30px 44px;
+  overflow: hidden;
+}
+
+.cf-cuerpo h2 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 700;
+  color: var(--cf-titulo);
+}
+
+.cf-desc {
+  color: var(--cf-texto);
+  line-height: 1.55;
+  font-size: 0.98rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cf-cuerpo h3 {
+  margin-top: auto;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--cf-texto);
+}
+
+.cf-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+}
+
+.cf-chips li {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.85rem;
+  color: var(--cf-texto);
+  background: var(--cf-chip-bg);
+}
+
+/* ====== Botones ====== */
+.cf-btn {
+  flex: 0 0 auto;
+  z-index: 20;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--cf-card-borde);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.2rem;
+  color: #fff;
+  background: var(--cf-card);
+  box-shadow: 0 8px 20px rgba(60, 0, 50, 0.4);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+
+.cf-btn:hover {
+  background: #c026d3;
+  transform: scale(1.1);
+}
+
+/* ====== Puntos (sobre el borde inferior de la tarjeta central) ====== */
+.cf-puntos {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--cf-alto) - 6px);
+  transform: translateX(-50%);
+  z-index: 30;
+  display: flex;
+  gap: 10px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: rgba(30, 5, 38, 0.9);
+  border: 1px solid var(--cf-card-borde);
+}
+
+.cf-puntos button {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition:
+    width 0.35s ease,
+    background 0.35s ease;
+}
+
+.cf-puntos button.activo {
+  width: 30px;
+  background: var(--cf-acento);
+}
+
+.cf:focus-visible .cf-card.activo {
+  outline: 3px solid var(--cf-acento);
+  outline-offset: 3px;
+}
+
+/* ====== Celular / tablet ====== */
+@media (max-width: 900px) {
+  .cf {
+    --cf-ancho: 340px;
+    --cf-alto: 600px;
+    flex-wrap: wrap;
+    padding: 0 10px;
+  }
+  .cf-escenario {
+    order: 1;
+    flex: 1 1 100%;
+  }
+  .cf-btn {
+    order: 2;
+    position: absolute;
+    bottom: -10px;
+    width: 46px;
+    height: 46px;
+  }
+  .cf-btn.prev {
+    left: calc(50% - 130px);
+  }
+  .cf-btn.next {
+    right: calc(50% - 130px);
+  }
+  .cf-escenario {
+    height: calc(var(--cf-alto) + 90px);
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .cf-card {
+    transform: translateX(calc(var(--offset) * 78%))
+      rotateY(calc(var(--offset) * -18deg)) scale(calc(1 - var(--abs) * 0.18));
+  }
+  .cf-imagen {
+    flex-basis: 190px;
+  }
+  .cf-puntos {
+    top: calc(var(--cf-alto) + 14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cf-card {
+    transition: none;
+  }
+}
